@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>LiveJS - Watch how your code runs in front of your eyes.</title>
+		<title>LiveEditor - Watch how your code runs in front of your eyes.</title>
 
 		<link rel="stylesheet" type="text/css" href="css/editor.css">
 		<link rel="stylesheet" type="text/css" href="css/web.css">
@@ -21,9 +21,7 @@
 						<div id="fileMenu" class="dropdown hidden">
 							<a onclick="createNewFile('rootFiles', 'untitled')">New File</a><br>
 							<a onclick="openFile()">Open</a><br>
-							<a onclick="saveFile()">Save</a><br>
-							<a onclick="deleteFile()">Delete</a><br>
-							<a href="">Edit</a>
+							<a href="">Exit</a>
 						</div>
 						<a onclick="dropdown('fileMenu', '80px')">File</a>
 					</li>
@@ -35,6 +33,9 @@
 							<a>Paste</a>
 						</div>
 						<a onclick="dropdown('editMenu', '120px')">Edit</a>
+					</li>
+					<li>
+						<a onclick="run()">Run</a>
 					</li>
 					<li>
 						<div id="helpMenu" class="dropdown hidden">
@@ -54,7 +55,7 @@
 					<div id="loading"><img src="img/loading.gif" alt="loading..."></div>
 				</div>
 				<div id="numbers">1</div>
-				<div id="editor" onkeyup="keyPressed(this.innerHTML)"></div>
+				<div id="editor"></div>
 			</div>
 			
 		</div>

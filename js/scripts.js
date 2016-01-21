@@ -2,32 +2,9 @@
 var temp = "";
 
 
-$(document).ready(function () {
-	$("#editor").keydown(function(e) {
-	    if(e.keyCode === 9) { // tab was pressed
+function keyPressed(file){
 
-	        // get caret position/selection
-	        var start = this.selectionStart;
-	        var end = this.selectionEnd;
-
-	        var $this = $(this);
-
-	        // set textarea value to: text before caret + tab + text after caret
-	        // $this.html($this.html().substring(0, start)
-	        //             + ""
-	        //             + $this.html().substring(end));
-
-	        // put caret at right position again
-	        this.selectionStart = this.selectionEnd = start + 1;
-
-	        // prevent the focus lose
-	        return false;
-	    }
-	});
-});
-
-
-function keyPressed(text){
+	var text = file.innerHTML;
 
 	var editorHeight = document.getElementById('editor').clientHeight;
 	var lines = (editorHeight/18)-1;
@@ -41,6 +18,29 @@ function keyPressed(text){
 
 	document.getElementById("numbers").innerHTML = numbers;
 
+
+	$(file).keydown(function(e) {
+	    if(e.keyCode === 9) { // tab was pressed
+
+	        // get caret position/selection
+	        var start = this.selectionStart;
+	        var end = this.selectionEnd;
+
+	        var $this = $(this);
+
+	        //set textarea value to: text before caret + tab + text after caret
+	        $this.html($this.html().substring(0, start)
+	                    + "           "
+	                    + $this.html().substring(end));
+
+	        // put caret at right position again
+	        this.selectionStart = this.selectionEnd = start + 1;
+
+	        // prevent the focus lose
+	        return false;
+	    }
+	});
+
 }
 
 
@@ -52,26 +52,26 @@ function openTab(tab){
 	var numOfFiles = document.getElementsByClassName('file').length;
 	var numOfOpenTabs = document.getElementsByClassName('open-tab').length;
 
-	if($('*[data-file="'+tab+'"]') == null){
+	if(typeof($('*[data-tab="'+tab+'"]').html()) === "undefined"){
 		
 		document.getElementById("loading").style.display = "block";
 
 		setTimeout(function(){
-			if(document.getElementById(tab+"Tab") == null){
-				document.getElementById('openTabs').innerHTML += openTabs + "<li id='"+tab+"Tab' class='open-tab tab-active' style='left:"+(numOfOpenTabs*170)+"px;'><div class='close-tab'><a class='"+tab+"Editable' onclick=\"closeTab('"+tab+"', '"+tab+"')\">x</a></div><a class='"+tab+"Editable' onclick=\"openTab('"+tab+"')\"><div class='tab' onfocus='tempName(this.innerHTML)' onfocusout='renameFile(this)' contenteditable='true'>"+tabTitle+"</div></a></li>";
+			if(typeof($('*[data-tab="'+tab+'"]').html()) === "undefined"){
+				document.getElementById('openTabs').innerHTML += openTabs + "<li data-tab='"+tab+"' class='open-tab tab-active' style='left:"+(numOfOpenTabs*170)+"px;'><div class='close-tab'><a data-tab-close='"+tab+"' onclick=\"closeTab('"+tab+"', '"+tab+"')\">x</a></div><a data-tab-open='"+tab+"' onclick=\"openTab('"+tab+"')\"><div class='tab' onfocus='tempName(this.innerHTML)' onfocusout='renameFile(this)' contenteditable='true'>"+tabTitle+"</div></a></li>";
 			}
 
 			for(var i=0; i<numOfOpenTabs; i++){
 				document.getElementsByClassName('open-tab')[i].className = "open-tab";
 			}
 
-			document.getElementById(tab+"Tab").className = "open-tab tab-active";
+			$('*[data-tab="'+tab+'"]').attr("class", "open-tab tab-active");
 
 			for(var i=0; i<numOfFiles; i++){
 				document.getElementsByClassName('file')[i].className = "file";
 			}
 
-			document.getElementById(tab+"File").className = "file file-active";
+			//document.getElementById(tab+"File").className = "file file-active";
 
 			var numOfTextFiles = document.getElementsByClassName('text-file').length;
 
@@ -79,25 +79,24 @@ function openTab(tab){
 				document.getElementsByClassName('text-file')[i].className = "text-file hidden";
 			}
 
-			console.log(tab);
 			$('*[data-file="'+tab+'"]').attr("class", "text-file");
 			keyPressed(document.getElementById('editor').innerHTML);
 
 			document.getElementById("loading").style.display = "none";
 
-		},1000);
+		}, 1);
 	
 	} else{
 
-		if(document.getElementById(tab+"Tab") == null){
-			document.getElementById('openTabs').innerHTML += openTabs + "<li id='"+tab+"Tab' class='open-tab tab-active' style='left:"+(numOfOpenTabs*170)+"px;'><div class='close-tab'><a class='"+tab+"Editable' onclick=\"closeTab('"+tab+"', '"+tab+"')\">x</a></div><a class='"+tab+"Editable' onclick=\"openTab('"+tab+"')\"><div class='tab' onfocus='tempName(this.innerHTML)' onfocusout='renameFile(this)' contenteditable='true'>"+tabTitle+"</div></a></li>";
+		if(typeof($('*[data-tab="'+tab+'"]').html()) === "undefined"){
+			document.getElementById('openTabs').innerHTML += openTabs + "<li data-tab='"+tab+"Tab' class='open-tab tab-active' style='left:"+(numOfOpenTabs*170)+"px;'><div class='close-tab'><a data-tab-close='"+tab+"' onclick=\"closeTab('"+tab+"', '"+tab+"')\">x</a></div><a data-tab-open='"+tab+"' onclick=\"openTab('"+tab+"')\"><div class='tab' onfocus='tempName(this.innerHTML)' onfocusout='renameFile(this)' contenteditable='true'>"+tabTitle+"</div></a></li>";
 		}
 
 		for(var i=0; i<numOfOpenTabs; i++){
 			document.getElementsByClassName('open-tab')[i].className = "open-tab";
 		}
 
-		document.getElementById(tab+"Tab").className = "open-tab tab-active";
+		$('*[data-tab="'+tab+'"]').attr("class", "open-tab tab-active");
 
 		for(var i=0; i<numOfFiles; i++){
 			document.getElementsByClassName('file')[i].className = "file";
@@ -111,21 +110,24 @@ function openTab(tab){
 			document.getElementsByClassName('text-file')[i].className = "text-file hidden";
 		}
 
-		console.log(tab);
 		$('*[data-file="'+tab+'"]').attr("class", "text-file");
 		keyPressed(document.getElementById('editor').innerHTML);
 	}
+ 
+
 
 }
 
 function closeTab(tab){
 	tab = tab.replace(/\s/g,'');
 
-	if(document.getElementById(tab+"Tab") != null){
+	if(typeof($('*[data-tab="'+tab+'"]').html()) !== "undefined"){
 
-		var className = document.getElementById(tab+"Tab").className;
+		var className = $('*[data-tab="'+tab+'"]').attr("class");
 		
-		document.getElementById(tab+"Tab").parentNode.removeChild(document.getElementById(tab+"Tab"));
+		$('[data-tab="'+tab+'"]').remove();
+
+		$('*[data-file="'+tab+'"]').remove();
 		
 		var numOfOpenTabs = document.getElementsByClassName('open-tab').length;
 		for(var i=0; i<numOfOpenTabs; i++){
@@ -161,7 +163,7 @@ function closeTab(tab){
 function createNewFile(folder, file){
 
 	if(typeof($('*[data-file="'+file+'"]').html()) === "undefined"){
-		document.getElementById("editor").innerHTML += "<div data-file='"+file+"' contenteditable='true'>Type Here...</div>";
+		document.getElementById("editor").innerHTML += "<div data-file='"+file+"' contenteditable='true' onkeyup=\"keyPressed(this.innerHTML)\">Type Here...</div>";
 		openTab(file);
 	} else{
 		console.log('File Already Exists');
@@ -204,23 +206,13 @@ function tempName(name){
 function renameFile(file){
 	var oldTab = temp+"Editable";
 
-	var newTab = file.innerHTML+"Editable";
+	$('*[data-tab-close="'+temp+'"]').attr("onclick", "closeTab('"+file.innerHTML+"', '"+file.innerHTML+"')");
+	$('*[data-tab-close="'+temp+'"]').attr("data-tab-close", file.innerHTML);
 
-	var close = document.getElementsByClassName(oldTab)[0];
-	close.onclick = function(){
-		closeTab(file.innerHTML, file.innerHTML);
-	}
-	close.className = newTab;
+	$('*[data-tab-open="'+temp+'"]').attr("onclick", "openTab('"+file.innerHTML+"')");
+	$('*[data-tab-open="'+temp+'"]').attr("data-tab-open", file.innerHTML);
 
-
-
-	var open = document.getElementsByClassName(oldTab)[0];
-	open.onclick = function(){
-		openTab(file.innerHTML);
-	}
-	open.className = newTab;
-
-	document.getElementById(temp+"Tab").id = file.innerHTML+"Tab"
+	$('*[data-tab="'+temp+'"]').attr("data-tab", file.innerHTML);
 
 	$('*[data-file="'+temp+'"]').attr("data-file", file.innerHTML)
 
