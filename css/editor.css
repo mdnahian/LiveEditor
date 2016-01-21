@@ -278,6 +278,8 @@
 	outline:none;
 	padding:10px;
 	color:#ffffff;
+	font-family: 'Source Code Pro';
+	font-size:15px;
 }
 
 #numbers{
@@ -289,6 +291,8 @@
 	width:50px;
 	padding:10px;
 	text-align:center;
+	font-family: 'Source Code Pro';
+	font-size:15px;
 }
 
 .tab-space{
@@ -307,4 +311,7 @@
 
 .text-file{
 	outline:none;
+	padding:0;
+	border:0;
+	margin:0;
 }

@@ -7,12 +7,12 @@ function keyPressed(file){
 	var text = file.innerHTML;
 
 	var editorHeight = document.getElementById('editor').clientHeight;
-	var lines = (editorHeight/18)-1;
+	var lines = (editorHeight/19)-1;
 
 	var numbers = "";
 
 	for(var i = 1; i<lines; i++){
-		var number = i+"<br>";
+		var number = "<div>"+i+"</div>";
 		numbers += number;
 	}
 
@@ -20,24 +20,26 @@ function keyPressed(file){
 
 
 	$(file).keydown(function(e) {
-	    if(e.keyCode === 9) { // tab was pressed
+	    if (e.keyCode === 9) { // tab key
+	        e.preventDefault();  // this will prevent us from tabbing out of the editor
 
-	        // get caret position/selection
-	        var start = this.selectionStart;
-	        var end = this.selectionEnd;
+	       // // get caret position/selection
+ 	       //  var start = file.selectionStart;
+ 	       //  var end = file.selectionEnd;
+ 
+ 	       //  // set textarea value to: text before caret + tab + text after caret
+ 	       //  console.log(file.innerHTML.substring(0, start));
+ 	       //  console.log(file.innerHTML.substring(end));
+ 	       //  var tabed = file.innerHTML.substring(0, start) + "\t" + file.innerHTML.substring(end);
 
-	        var $this = $(this);
+ 	       //  file.innerHTML = tabed;
+ 
+ 	       //  // put caret at right position again
+ 	       //  file.selectionStart = file.selectionEnd = start + 1;
+ 
+ 	       //  // prevent the focus lose
+ 	       //  return false;
 
-	        //set textarea value to: text before caret + tab + text after caret
-	        $this.html($this.html().substring(0, start)
-	                    + "           "
-	                    + $this.html().substring(end));
-
-	        // put caret at right position again
-	        this.selectionStart = this.selectionEnd = start + 1;
-
-	        // prevent the focus lose
-	        return false;
 	    }
 	});
 
@@ -163,7 +165,7 @@ function closeTab(tab){
 function createNewFile(folder, file){
 
 	if(typeof($('*[data-file="'+file+'"]').html()) === "undefined"){
-		document.getElementById("editor").innerHTML += "<div data-file='"+file+"' contenteditable='true' onkeyup=\"keyPressed(this.innerHTML)\">Type Here...</div>";
+		document.getElementById("editor").innerHTML += "<div data-file='"+file+"' contenteditable='true' onkeyup=\"keyPressed(this)\" spellcheck='false'>Type Here...</div>";
 		openTab(file);
 	} else{
 		console.log('File Already Exists');
