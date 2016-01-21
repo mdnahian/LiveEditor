@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>LiveJS - Watch how your code runs in front of your eyes.</title>
+
+		<link rel="stylesheet" type="text/css" href="css/editor.css">
+		<link rel="stylesheet" type="text/css" href="css/web.css">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="js/scripts.js"></script>
+	</head>
+
+	<body onload="createNewFile('rootFiles', 'untitled')">
+
+		<div class="wrapper">
+
+			<div id="menu">
+				<ul>
+					<li><img src="img/mac_buttons.png" alt="mac buttons"></li>
+					<li>
+						<div id="fileMenu" class="dropdown hidden">
+							<a onclick="createNewFile('rootFiles', 'untitled')">New File</a><br>
+							<a onclick="openFile()">Open</a><br>
+							<a onclick="saveFile()">Save</a><br>
+							<a onclick="deleteFile()">Delete</a><br>
+							<a href="logout.php">Logout</a>
+						</div>
+						<a onclick="dropdown('fileMenu', '80px')">File</a>
+					</li>
+					<li>
+						<div id="editMenu" class="dropdown hidden">
+							<a>Undo</a><br>
+							<a>Redo</a><br>
+							<a>Copy</a><br>
+							<a>Paste</a>
+						</div>
+						<a onclick="dropdown('editMenu', '120px')">Edit</a>
+					</li>
+					<li>
+						<div id="helpMenu" class="dropdown hidden">
+							<a>GitHub</a><br>
+							<a>Twitter</a>
+						</div>
+						<a onclick="dropdown('helpMenu', '160px')">Help</a>
+					</li>
+				</ul>	
+			</div>
+
+			<div id="container" onClick="closeDropdown()">
+				<div id="tabs">
+					<ul id="openTabs">
+						<!--<li id="HomeTab" class="open-tab tab-active"><div class="close-tab"><a onclick="closeTab('Home')">x</a></div><a onclick="openTab('Home')"><div class="tab">Home</div></a></li>-->
+					</ul>
+
+					<div id="loading"><img src="img/loading.gif" alt="loading..."></div>
+				</div>
+				<div id="numbers">1</div>
+				<div id="editor" onkeyup="keyPressed(this.innerHTML)" contenteditable="true"></div>
+			</div>
+			
+		</div>
+
+
+	</body>
+</html>

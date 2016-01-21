@@ -1,0 +1,15 @@
+body{
+	margin:0 auto;
+	padding:0;
+	background-color:#eeeeee;
+	font-family:Helvetica;
+	overflow:hidden;
+	overflow-x:hidden;
+	overflow-y:hidden;
+}
+
+a{
+	cursor:pointer;
+	text-decoration:none;
+	color:#000000;
+}
