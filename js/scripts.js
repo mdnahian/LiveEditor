@@ -1,4 +1,7 @@
 
+var temp = "";
+
+
 $(document).ready(function () {
 	$("#editor").keydown(function(e) {
 	    if(e.keyCode === 9) { // tab was pressed
@@ -24,12 +27,6 @@ $(document).ready(function () {
 });
 
 
-function toggleFolder(triangle, files){
-	$(files).slideToggle('fast');
-	$(triangle).toggleClass('triangle-right');
-	$(triangle).toggleClass('triangle-down');
-}
-
 function keyPressed(text){
 
 	var editorHeight = document.getElementById('editor').clientHeight;
@@ -46,6 +43,7 @@ function keyPressed(text){
 
 }
 
+
 function openTab(tab){
 
 	tabTitle = tab;
@@ -54,14 +52,13 @@ function openTab(tab){
 	var numOfFiles = document.getElementsByClassName('file').length;
 	var numOfOpenTabs = document.getElementsByClassName('open-tab').length;
 
-	if(document.getElementById(tab) == null){
-		loadPage(tabTitle);
-
+	if($('*[data-file="'+tab+'"]') == null){
+		
 		document.getElementById("loading").style.display = "block";
 
 		setTimeout(function(){
 			if(document.getElementById(tab+"Tab") == null){
-				document.getElementById('openTabs').innerHTML += openTabs + "<li id='"+tab+"Tab' class='open-tab tab-active' style='left:"+(numOfOpenTabs*170)+"px;'><div class='close-tab'><a onclick=\"closeTab('"+tab+"', '"+tab+"')\">x</a></div><a onclick=\"openTab('"+tab+"')\"><div class='tab' contenteditable='true'>"+tabTitle+"</div></a></li>";
+				document.getElementById('openTabs').innerHTML += openTabs + "<li id='"+tab+"Tab' class='open-tab tab-active' style='left:"+(numOfOpenTabs*170)+"px;'><div class='close-tab'><a class='"+tab+"Editable' onclick=\"closeTab('"+tab+"', '"+tab+"')\">x</a></div><a class='"+tab+"Editable' onclick=\"openTab('"+tab+"')\"><div class='tab' onfocus='tempName(this.innerHTML)' onfocusout='renameFile(this)' contenteditable='true'>"+tabTitle+"</div></a></li>";
 			}
 
 			for(var i=0; i<numOfOpenTabs; i++){
@@ -83,7 +80,7 @@ function openTab(tab){
 			}
 
 			console.log(tab);
-			document.getElementById(tab).className = 'text-file';
+			$('*[data-file="'+tab+'"]').attr("class", "text-file");
 			keyPressed(document.getElementById('editor').innerHTML);
 
 			document.getElementById("loading").style.display = "none";
@@ -93,7 +90,7 @@ function openTab(tab){
 	} else{
 
 		if(document.getElementById(tab+"Tab") == null){
-			document.getElementById('openTabs').innerHTML += openTabs + "<li id='"+tab+"Tab' class='open-tab tab-active' style='left:"+(numOfOpenTabs*170)+"px;'><div class='close-tab'><a onclick=\"closeTab('"+tab+"', '"+tab+"')\">x</a></div><a onclick=\"openTab('"+tab+"')\"><div class='tab' contenteditable='true'>"+tabTitle+"</div></a></li>";
+			document.getElementById('openTabs').innerHTML += openTabs + "<li id='"+tab+"Tab' class='open-tab tab-active' style='left:"+(numOfOpenTabs*170)+"px;'><div class='close-tab'><a class='"+tab+"Editable' onclick=\"closeTab('"+tab+"', '"+tab+"')\">x</a></div><a class='"+tab+"Editable' onclick=\"openTab('"+tab+"')\"><div class='tab' onfocus='tempName(this.innerHTML)' onfocusout='renameFile(this)' contenteditable='true'>"+tabTitle+"</div></a></li>";
 		}
 
 		for(var i=0; i<numOfOpenTabs; i++){
@@ -115,7 +112,7 @@ function openTab(tab){
 		}
 
 		console.log(tab);
-		document.getElementById(tab).className = 'text-file';
+		$('*[data-file="'+tab+'"]').attr("class", "text-file");
 		keyPressed(document.getElementById('editor').innerHTML);
 	}
 
@@ -162,32 +159,17 @@ function closeTab(tab){
 }
 
 function createNewFile(folder, file){
-	document.getElementById("editor").innerHTML = "<div id='"+file+"'>Type Here...</div>";
-	//document.getElementById(folder).innerHTML += "<li id='"+file+"File' class='file'><a onclick=\"$(this).click(function() { return false; }).dblclick(function() { openTab('"+file+"'); return false; });\"><span class='triangle transparent'>&#9660;</span> "+file+"</a></li>";
-	openTab(file);
+
+	if(typeof($('*[data-file="'+file+'"]').html()) === "undefined"){
+		document.getElementById("editor").innerHTML += "<div data-file='"+file+"' contenteditable='true'>Type Here...</div>";
+		openTab(file);
+	} else{
+		console.log('File Already Exists');
+	}
+
 	closeDropdown();
 }
 
-function deleteFile(folder, file){
-
-}
-
-function loadPage(page){
-	if (window.XMLHttpRequest) {
-    	// code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp = new XMLHttpRequest();
-    } else {
-        // code for IE6, IE5
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            document.getElementById("editor").innerHTML += xmlhttp.responseText;
-    	}
-    }
-    xmlhttp.open("GET","tools/load-text.php?page="+page,true);
-    xmlhttp.send();
-}
 
 function dropdown(menu, left){
 	
@@ -201,9 +183,10 @@ function dropdown(menu, left){
 	
 	document.getElementById(menu).style.left = left;
 	
-	$("#"+menu).slideToggle('fast');
+	$("#"+menu).slideToggle(1);
 
 }
+
 
 function closeDropdown(){
 	var numOfDropdowns = document.getElementsByClassName('dropdown').length;
@@ -213,40 +196,33 @@ function closeDropdown(){
 	}
 }
 
-function saveFile(){
-	var numOfOpenTabs = document.getElementsByClassName('open-tab').length;
-	var fileToSave = "";
-	for(var i=0; i<numOfOpenTabs; i++){
-		if(document.getElementsByClassName('open-tab')[i].className === "open-tab tab-active"){
-			fileToSave = document.getElementsByClassName('open-tab')[i].id.replace("Tab", "");
-		}
-	}
-	
-	if(fileToSave !== ""){
-		var fileContent = document.getElementById(fileToSave).innerHTML;
-	
-		if (window.XMLHttpRequest) {
-	    	// code for IE7+, Firefox, Chrome, Opera, Safari
-	        xmlhttp = new XMLHttpRequest();
-	    } else {
-	        // code for IE6, IE5
-	        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	    }
-	    xmlhttp.onreadystatechange = function() {
-	        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	            if(xmlhttp.responseText == ""){
-	            	console.log("Could not save file.");
-	            } else{
-	            	console.log(xmlhttp.responseText);
-	            }
-	    	}
-	    }
-	    xmlhttp.open("POST","tools/save-file.php?name="+fileToSave+"&content="+fileContent,true);
-	    xmlhttp.send();
-	}
+
+function tempName(name){
+	temp = name;
 }
 
-function loadFiles(folder){
-	
-}
+function renameFile(file){
+	var oldTab = temp+"Editable";
 
+	var newTab = file.innerHTML+"Editable";
+
+	var close = document.getElementsByClassName(oldTab)[0];
+	close.onclick = function(){
+		closeTab(file.innerHTML, file.innerHTML);
+	}
+	close.className = newTab;
+
+
+
+	var open = document.getElementsByClassName(oldTab)[0];
+	open.onclick = function(){
+		openTab(file.innerHTML);
+	}
+	open.className = newTab;
+
+	document.getElementById(temp+"Tab").id = file.innerHTML+"Tab"
+
+	$('*[data-file="'+temp+'"]').attr("data-file", file.innerHTML)
+
+	temp = "";
+}

@@ -294,3 +294,17 @@
 .tab-space{
 	width:20px;
 }
+
+::selection {
+  background: #242424; /* WebKit/Blink Browsers */
+  color:#ffffff;
+}
+
+::-moz-selection {
+  background: #242424; /* Gecko Browsers */
+  color:#ffffff;
+}
+
+.text-file{
+	outline:none;
+}

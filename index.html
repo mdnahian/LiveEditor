@@ -23,7 +23,7 @@
 							<a onclick="openFile()">Open</a><br>
 							<a onclick="saveFile()">Save</a><br>
 							<a onclick="deleteFile()">Delete</a><br>
-							<a href="logout.php">Logout</a>
+							<a href="">Edit</a>
 						</div>
 						<a onclick="dropdown('fileMenu', '80px')">File</a>
 					</li>
@@ -49,13 +49,12 @@
 			<div id="container" onClick="closeDropdown()">
 				<div id="tabs">
 					<ul id="openTabs">
-						<!--<li id="HomeTab" class="open-tab tab-active"><div class="close-tab"><a onclick="closeTab('Home')">x</a></div><a onclick="openTab('Home')"><div class="tab">Home</div></a></li>-->
 					</ul>
 
 					<div id="loading"><img src="img/loading.gif" alt="loading..."></div>
 				</div>
 				<div id="numbers">1</div>
-				<div id="editor" onkeyup="keyPressed(this.innerHTML)" contenteditable="true"></div>
+				<div id="editor" onkeyup="keyPressed(this.innerHTML)"></div>
 			</div>
 			
 		</div>
