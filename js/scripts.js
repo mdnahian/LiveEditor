@@ -220,3 +220,7 @@ function renameFile(file){
 
 	temp = "";
 }
+
+function run(){
+	
+}
